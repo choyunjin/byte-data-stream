@@ -1,11 +1,25 @@
 {
   "name": "byte-data-stream",
-  "version": "0.0.1-rokka0b",
-  "description": "",
+  "version": "0.0.2-rokka0",
+  "description": "Byte data stream",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
-  "license": "MIT"
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kmoon2437/byte-data-stream.git"
+  },
+  "keywords": [
+    "byte",
+    "data",
+    "buffer",
+    "stream"
+  ],
+  "bugs": {
+    "url": "https://github.com/kmoon2437/byte-data-stream/issues"
+  },
+  "homepage": "https://github.com/kmoon2437/byte-data-stream#readme"
 }

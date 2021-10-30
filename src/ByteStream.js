@@ -116,17 +116,17 @@ module.exports = class ByteStream{
         return n;
     }
     
-    read_var_uint(max_length = Infinity){
+    read_var_uint(max_byte_length = Infinity){
         let num = 0;
         let i = 0,v = 0;
-        while(max_length > i++){
+        while(max_byte_length > i++){
             v = this.read_uint8();
             if(v & 128){
                 num += v & 127;
                 num <<= 7;
             }else return num + v;
         }
-        throw new RangeError(`0x${this.i.toString(16)}: Variable integer length cannot exceed ${max_length} bytes`);
+        throw new RangeError(`0x${this.i.toString(16)}: Variable integer length cannot exceed ${max_byte_length} bytes`);
     }
     
     // ArrayBuffer를 확장한다.
