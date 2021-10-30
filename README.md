@@ -1,5 +1,5 @@
 # byte-data-stream
-Byte data stream
+Readable & writable byte data stream
 
 ## Usage
 ```js

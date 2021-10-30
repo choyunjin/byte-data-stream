@@ -1,7 +1,7 @@
 {
   "name": "byte-data-stream",
   "version": "0.0.2-rokka0",
-  "description": "Byte data stream",
+  "description": "Readable & writable byte data stream",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
