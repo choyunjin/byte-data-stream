@@ -23,98 +23,50 @@ module.exports = class ByteStream{
         return this.view.getUint8(this.i++);
     }
     
-    read_int16_be(){
-        let n = this.view.getInt16(this.i);
+    read_int16(little_endian){
+        let n = this.view.getInt16(this.i,little_endian);
         this.i += 2;
         return n;
     }
     
-    read_int16_le(){
-        let n = this.view.getInt16(this.i,true);
+    read_uint16(little_endian){
+        let n = this.view.getUint16(this.i,little_endian);
         this.i += 2;
         return n;
     }
     
-    read_uint16_be(){
-        let n = this.view.getUint16(this.i);
-        this.i += 2;
-        return n;
-    }
-    
-    read_uint16_le(){
-        let n = this.view.getUint16(this.i,true);
-        this.i += 2;
-        return n;
-    }
-    
-    read_int32_be(){
-        let n = this.view.getInt32(this.i);
+    read_int32(little_endian){
+        let n = this.view.getInt32(this.i,little_endian);
         this.i += 4;
         return n;
     }
     
-    read_int32_le(){
-        let n = this.view.getInt32(this.i,true);
+    read_uint32(little_endian){
+        let n = this.view.getUint32(this.i,little_endian);
         this.i += 4;
         return n;
     }
     
-    read_uint32_be(){
-        let n = this.view.getUint32(this.i);
-        this.i += 2;
-        return n;
-    }
-    
-    read_uint32_le(){
-        let n = this.view.getUint32(this.i,true);
-        this.i += 2;
-        return n;
-    }
-    
-    read_big_int64_be(){
-        let n = this.view.getBigInt64(this.i);
+    read_big_int64(little_endian){
+        let n = this.view.getBigInt64(this.i,little_endian);
         this.i += 8;
         return n;
     }
     
-    read_big_int64_le(){
-        let n = this.view.getBigInt64(this.i,true);
+    read_big_uint64(little_endian){
+        let n = this.view.getBigUint64(this.i,little_endian);
         this.i += 8;
         return n;
     }
     
-    read_big_uint64_be(){
-        let n = this.view.getBigUint64(this.i);
-        this.i += 8;
-        return n;
-    }
-    
-    read_big_uint64_le(){
-        let n = this.view.getBigUint64(this.i,true);
-        this.i += 8;
-        return n;
-    }
-    
-    read_float32_be(){
-        let n = this.view.getFloat32(this.i);
+    read_float32(little_endian){
+        let n = this.view.getFloat32(this.i,little_endian);
         this.i += 4;
         return n;
     }
     
-    read_float32_le(){
-        let n = this.view.getFloat32(this.i,true);
-        this.i += 4;
-        return n;
-    }
-    
-    read_float64_be(){
-        let n = this.view.getFloat64(this.i);
-        this.i += 8;
-        return n;
-    }
-    
-    read_float64_le(){
-        let n = this.view.getFloat64(this.i,true);
+    read_float64(little_endian){
+        let n = this.view.getFloat64(this.i,little_endian);
         this.i += 8;
         return n;
     }
@@ -131,27 +83,23 @@ module.exports = class ByteStream{
         throw new RangeError(`0x${this.i.toString(16)}: Variable integer length cannot exceed ${max_byte_length} bytes`);
     }
     
-    read_var_int_be(max_byte_length = Infinity){
-        let bytes = this.read_var_int_bytes(max_byte_length).reverse();
-        bytes[0] += 128;
-        bytes[bytes.length-1] -= 128;
+    read_var_int(big_endian,max_byte_length = Infinity){
+        let bytes = this.read_var_int_bytes(max_byte_length);
+        if(big_endian){
+            bytes = bytes.reverse();
+            bytes[0] += 128;
+            bytes[bytes.length-1] -= 128;
+        }
         return var_int.decode(bytes);
     }
     
-    read_var_int_le(max_byte_length = Infinity){
+    read_var_uint(big_endian,max_byte_length = Infinity){
         let bytes = this.read_var_int_bytes(max_byte_length);
-        return var_int.decode(bytes);
-    }
-    
-    read_var_uint_be(max_byte_length = Infinity){
-        let bytes = this.read_var_int_bytes(max_byte_length).reverse();
-        bytes[0] += 128;
-        bytes[bytes.length-1] -= 128;
-        return var_uint.decode(bytes);
-    }
-    
-    read_var_uint_le(max_byte_length = Infinity){
-        let bytes = this.read_var_int_bytes(max_byte_length);
+        if(big_endian){
+            bytes = bytes.reverse();
+            bytes[0] += 128;
+            bytes[bytes.length-1] -= 128;
+        }
         return var_uint.decode(bytes);
     }
     
@@ -178,128 +126,73 @@ module.exports = class ByteStream{
         this.view.setUint8(this.i++,val);
     }
     
-    write_int16_be(val){
+    write_int16(val,little_endian){
         this.expand_buffer(2);
-        let n = this.view.setInt16(this.i,val);
+        let n = this.view.setInt16(this.i,val,little_endian);
         this.i += 2;
     }
     
-    write_int16_le(val){
+    write_uint16(val,little_endian){
         this.expand_buffer(2);
-        let n = this.view.setInt16(this.i,val,true);
+        let n = this.view.setUint16(this.i,val,little_endian);
         this.i += 2;
     }
     
-    write_uint16_be(val){
-        this.expand_buffer(2);
-        let n = this.view.setUint16(this.i,val);
-        this.i += 2;
-    }
-    
-    write_uint16_le(val){
-        this.expand_buffer(2);
-        let n = this.view.setUint16(this.i,val,true);
-        this.i += 2;
-    }
-    
-    write_int32_be(val){
+    write_int32(val,little_endian){
         this.expand_buffer(4);
-        let n = this.view.setInt32(this.i,val);
+        let n = this.view.setInt32(this.i,val,little_endian);
         this.i += 4;
     }
     
-    write_int32_le(val){
+    write_uint32(val,little_endian){
         this.expand_buffer(4);
-        let n = this.view.setInt32(this.i,val,true);
+        let n = this.view.setUint32(this.i,val,little_endian);
         this.i += 4;
     }
     
-    write_uint32_be(val){
+    write_big_int64(val,little_endian){
+        this.expand_buffer(8);
+        let n = this.view.setBigInt64(this.i,val,little_endian);
+        this.i += 8;
+    }
+    
+    write_big_uint64(val,little_endian){
+        this.expand_buffer(8);
+        let n = this.view.setBigUint64(this.i,val,little_endian);
+        this.i += 8;
+    }
+    
+    write_float32(val,little_endian){
         this.expand_buffer(4);
-        let n = this.view.setUint32(this.i,val);
+        let n = this.view.setFloat32(this.i,val,little_endian);
         this.i += 4;
     }
     
-    write_uint32_le(val){
-        this.expand_buffer(4);
-        let n = this.view.setUint32(this.i,val,true);
-        this.i += 4;
-    }
-    
-    write_big_int64_be(val){
+    write_float64(val,little_endian){
         this.expand_buffer(8);
-        let n = this.view.setBigInt64(this.i,val);
+        let n = this.view.setFloat64(this.i,val,little_endian);
         this.i += 8;
     }
     
-    write_big_int64_le(val){
-        this.expand_buffer(8);
-        let n = this.view.setBigInt64(this.i,val,true);
-        this.i += 8;
-    }
-    
-    write_big_uint64_be(val){
-        this.expand_buffer(8);
-        let n = this.view.setBigUint64(this.i,val);
-        this.i += 8;
-    }
-    
-    write_big_uint64_le(val){
-        this.expand_buffer(8);
-        let n = this.view.setBigUint64(this.i,val,true);
-        this.i += 8;
-    }
-    
-    write_float32_be(val){
-        this.expand_buffer(4);
-        let n = this.view.setFloat32(this.i,val);
-        this.i += 4;
-    }
-    
-    write_float32_le(val){
-        this.expand_buffer(4);
-        let n = this.view.setFloat32(this.i,val,true);
-        this.i += 4;
-    }
-    
-    write_float64_be(val){
-        this.expand_buffer(8);
-        let n = this.view.setFloat64(this.i,val);
-        this.i += 8;
-    }
-    
-    write_float64_le(val){
-        this.expand_buffer(8);
-        let n = this.view.setFloat64(this.i,val,true);
-        this.i += 8;
-    }
-    
-    write_var_int_be(val){
-        let a = var_int.encode(val).reverse();
-        a[0] += 128;
-        a[a.length-1] -= 128;
-        this.expand_buffer(a.length);
-        a.forEach(n => this.write_uint8(n));
-    }
-    
-    write_var_int_le(val){
+    write_var_int(val,big_endian){
         let a = var_int.encode(val);
+        if(big_endian){
+            a = a.reverse();
+            a[0] += 128;
+            a[a.length-1] -= 128;
+        }
         this.expand_buffer(a.length);
         a.forEach(n => this.write_uint8(n));
     }
     
-    write_var_uint_be(val){
-        let a = var_uint.encode(val).reverse();
-        a[0] += 128;
-        a[a.length-1] -= 128;
-        this.expand_buffer(a.length);
-        a.forEach(n => this.write_uint8(n));
-    }
-    
-    write_var_uint_le(val){
+    write_var_uint(val,big_endian){
         let a = var_uint.encode(val);
+        if(big_endian){
+            a = a.reverse();
+            a[0] += 128;
+            a[a.length-1] -= 128;
+        }
         this.expand_buffer(a.length);
-        console.log(a);
         a.forEach(n => this.write_uint8(n));
     }
     
