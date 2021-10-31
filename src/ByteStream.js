@@ -1,3 +1,6 @@
+const var_int = require('signed-varint');
+const var_uint = require('varint');
+
 /**
  * ㅆ발 이거 ㅈㄴ 노가다임
  */
@@ -116,22 +119,46 @@ module.exports = class ByteStream{
         return n;
     }
     
-    read_var_uint(max_byte_length = Infinity){
-        let num = 0;
-        let i = 0,v = 0;
+    read_var_int_bytes(max_byte_length = Infinity){
+        let bytes = [];
+        let i = 0;
         while(max_byte_length > i++){
-            v = this.read_uint8();
-            if(v & 128){
-                num += v & 127;
-                num <<= 7;
-            }else return num + v;
+            bytes.push(this.read_uint8());
+            if(!(bytes[bytes.length-1] & 128)){
+                return bytes;
+            }
         }
         throw new RangeError(`0x${this.i.toString(16)}: Variable integer length cannot exceed ${max_byte_length} bytes`);
+    }
+    
+    read_var_int_be(max_byte_length = Infinity){
+        let bytes = this.read_var_int_bytes(max_byte_length).reverse();
+        bytes[0] += 128;
+        bytes[bytes.length-1] -= 128;
+        return var_int.decode(bytes);
+    }
+    
+    read_var_int_le(max_byte_length = Infinity){
+        let bytes = this.read_var_int_bytes(max_byte_length);
+        return var_int.decode(bytes);
+    }
+    
+    read_var_uint_be(max_byte_length = Infinity){
+        let bytes = this.read_var_int_bytes(max_byte_length).reverse();
+        bytes[0] += 128;
+        bytes[bytes.length-1] -= 128;
+        return var_uint.decode(bytes);
+    }
+    
+    read_var_uint_le(max_byte_length = Infinity){
+        let bytes = this.read_var_int_bytes(max_byte_length);
+        return var_uint.decode(bytes);
     }
     
     // ArrayBuffer를 확장한다.
     expand_buffer(len){
         if(this.buf.byteLength >= this.i+len) return;
+        len = (this.i+len)-this.buf.byteLength;
         let buf = [...new Uint8Array(this.buf)];
         this.buf = new ArrayBuffer(buf.length+len);
         let v = new Uint8Array(this.buf);
@@ -247,27 +274,33 @@ module.exports = class ByteStream{
         this.i += 8;
     }
     
-    write_var_uint(val){
-        if(Number.MAX_SAFE_INTEGER && val > Number.MAX_SAFE_INTEGER){
-            throw new RangeError('Could not encode varint');
-        }
-        let a = [];
-        let i = 0;
-        
-        while(val > 2147483647){
-            a[i++] = (val & 255) | 128;
-            val /= 128;
-        }
-        
-        while(val & -129){
-            a[i++] = (val & 255) | 128;
-            val >>>= 7;
-        }
-        
-        a[i] = val || 0;
+    write_var_int_be(val){
+        let a = var_int.encode(val).reverse();
+        a[0] += 128;
+        a[a.length-1] -= 128;
         this.expand_buffer(a.length);
         a.forEach(n => this.write_uint8(n));
-        this.i += a.length;
+    }
+    
+    write_var_int_le(val){
+        let a = var_int.encode(val);
+        this.expand_buffer(a.length);
+        a.forEach(n => this.write_uint8(n));
+    }
+    
+    write_var_uint_be(val){
+        let a = var_uint.encode(val).reverse();
+        a[0] += 128;
+        a[a.length-1] -= 128;
+        this.expand_buffer(a.length);
+        a.forEach(n => this.write_uint8(n));
+    }
+    
+    write_var_uint_le(val){
+        let a = var_uint.encode(val);
+        this.expand_buffer(a.length);
+        console.log(a);
+        a.forEach(n => this.write_uint8(n));
     }
     
     ensure_array_buffer(buf){
