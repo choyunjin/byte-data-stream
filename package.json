@@ -1,6 +1,6 @@
 {
   "name": "byte-data-stream",
-  "version": "0.0.3-rokka0",
+  "version": "0.0.4-rokka0",
   "description": "Readable & writable byte data stream",
   "main": "index.js",
   "scripts": {
