@@ -11,6 +11,7 @@ let stream = new ByteStream(buf);
 
 stream.read_int8(); // read signed byte
 stream.read_uint8(); // read unsigned byte
+stream.read_bytes(8); // read many bytes
 stream.read_int16(); // read signed big-endian 16-bit integer
 stream.read_uint16(true); // read unsigned little-endian 16-bit integer
 stream.read_var_uint(); // read unsigned little-endian varint
@@ -18,6 +19,7 @@ stream.read_var_uint(); // read unsigned little-endian varint
 
 stream.write_int8(96); // write signed byte
 stream.write_uint8(192); // write unsigned byte
+stream.write_bytes([19,72,11,21,19,72,11,21]); // write many bytes
 stream.write_int16(1972); // write signed big-endian 16-bit integer
 stream.write_uint16(49861,true); // write unsigned little-endian 16-bit integer
 stream.write_var_uint(92736296525); // write unsigned little-endian varint
@@ -28,10 +30,12 @@ stream.write_var_uint(92736296525); // write unsigned little-endian varint
 ```js
 // properties
 stream.i; // position
+stream.buffer; // ArrayBuffer
 
 // methods for reading data
 stream.read_int8();
 stream.read_uint8();
+stream.read_bytes(length);
 stream.read_int16(little_endian);
 stream.read_uint16(little_endian);
 stream.read_int32(little_endian);
@@ -46,6 +50,7 @@ stream.read_var_uint(big_endian,max_byte_length = Infinity);
 // methods for writing data
 stream.write_int8(val);
 stream.write_uint8(val);
+stream.write_bytes(bytes);
 stream.write_int16(val,little_endian);
 stream.write_uint16(val,little_endian);
 stream.write_int32(val,little_endian);

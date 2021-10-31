@@ -6,7 +6,7 @@ const var_uint = require('varint');
  */
 module.exports = class ByteStream{
     constructor(buf){
-        this.buf = this.ensure_array_buffer(buf);
+        this.buf = buf ? this.ensure_array_buffer(buf) : new ArrayBuffer();
         this.i = 0;
         this.view = new DataView(this.buf);
     }
@@ -21,6 +21,14 @@ module.exports = class ByteStream{
     
     read_uint8(){
         return this.view.getUint8(this.i++);
+    }
+    
+    read_bytes(length){
+        let arr = [];
+        for(let i = 0;i < length;i++){
+            arr.push(this.read_uint8());
+        }
+        return arr;
     }
     
     read_int16(little_endian){
@@ -124,6 +132,12 @@ module.exports = class ByteStream{
     write_uint8(val){
         this.expand_buffer(1);
         this.view.setUint8(this.i++,val);
+    }
+    
+    write_bytes(bytes){
+        for(let n of bytes){
+            this.write_uint8(n);
+        }
     }
     
     write_int16(val,little_endian){
