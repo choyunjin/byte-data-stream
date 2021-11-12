@@ -91,9 +91,9 @@ module.exports = class ByteStream{
         throw new RangeError(`0x${this.i.toString(16)}: Variable integer length cannot exceed ${max_byte_length} bytes`);
     }
     
-    read_var_int(big_endian,max_byte_length = Infinity){
+    read_var_int(little_endian,max_byte_length = Infinity){
         let bytes = this.read_var_int_bytes(max_byte_length);
-        if(big_endian){
+        if(!little_endian){
             bytes = bytes.reverse();
             bytes[0] += 128;
             bytes[bytes.length-1] -= 128;
@@ -101,9 +101,9 @@ module.exports = class ByteStream{
         return var_int.decode(bytes);
     }
     
-    read_var_uint(big_endian,max_byte_length = Infinity){
+    read_var_uint(little_endian,max_byte_length = Infinity){
         let bytes = this.read_var_int_bytes(max_byte_length);
-        if(big_endian){
+        if(!little_endian){
             bytes = bytes.reverse();
             bytes[0] += 128;
             bytes[bytes.length-1] -= 128;
@@ -188,9 +188,9 @@ module.exports = class ByteStream{
         this.i += 8;
     }
     
-    write_var_int(val,big_endian){
+    write_var_int(val,little_endian){
         let a = var_int.encode(val);
-        if(big_endian){
+        if(!little_endian){
             a = a.reverse();
             a[0] += 128;
             a[a.length-1] -= 128;
@@ -199,9 +199,9 @@ module.exports = class ByteStream{
         a.forEach(n => this.write_uint8(n));
     }
     
-    write_var_uint(val,big_endian){
+    write_var_uint(val,little_endian){
         let a = var_uint.encode(val);
-        if(big_endian){
+        if(!little_endian){
             a = a.reverse();
             a[0] += 128;
             a[a.length-1] -= 128;
