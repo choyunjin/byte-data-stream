@@ -116,10 +116,11 @@ module.exports = class ByteStream{
         if(this.buf.byteLength >= this.i+len) return;
         len = (this.i+len)-this.buf.byteLength;
         if(len <= 0) return;
-        let buf = new ArrayBuffer(this.buf.byteLength+len);
-        new Uint8Array(buf).set(this.buf);
-        delete this.buf;
-        this.buf = buf;
+        let u8a1 = new Uint8Array(this.buf.byteLength+len);
+        let u8a2 = new Uint8Array(this.buf);
+        u8a1.set(u8a2);
+        this.buf = u8a1.buffer;
+        this.view = new DataView(this.buf);
     }
     
     write_int8(val){
