@@ -116,7 +116,7 @@ module.exports = class ByteStream{
         if(this.buf.byteLength >= this.i+len) return;
         len = (this.i+len)-this.buf.byteLength;
         if(len <= 0) return;
-        let buf = new ArrayBuffer(buf.length+len);
+        let buf = new ArrayBuffer(this.buf.byteLength+len);
         new Uint8Array(buf).set(this.buf);
         delete this.buf;
         this.buf = buf;
