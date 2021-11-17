@@ -4,7 +4,7 @@ Readable & writable byte data stream
 ## Usage
 ```js
 const fs = require('fs');
-const { ByteStream } = require('byte-data-stream');
+const { ByteStream,ByteStreamSimulator } = require('byte-data-stream');
 
 let buf = fs.readFileSync('......'); // any ArrayBuffer or Uint8Array or nodejs Buffer
 let stream = new ByteStream(buf);
@@ -17,13 +17,22 @@ stream.read_uint16(true); // read unsigned little-endian 16-bit integer
 stream.read_var_uint(); // read unsigned big-endian varint
 // ...
 
-stream.write_int8(96); // write signed byte
-stream.write_uint8(192); // write unsigned byte
-stream.write_bytes([19,72,11,21,19,72,11,21]); // write many bytes
-stream.write_int16(1972); // write signed big-endian 16-bit integer
-stream.write_uint16(49861,true); // write unsigned little-endian 16-bit integer
-stream.write_var_uint(92736296525); // write unsigned big-endian varint
+let stream2 = new ByteStream();
+stream2.write_int8(96); // write signed byte
+stream2.write_uint8(192); // write unsigned byte
+stream2.write_bytes([19,72,11,21,19,72,11,21]); // write many bytes
+stream2.write_int16(1972); // write signed big-endian 16-bit integer
+stream2.write_uint16(49861,true); // write unsigned little-endian 16-bit integer
+stream2.write_var_uint(92736296525); // write unsigned big-endian varint
 // ...
+
+// this is the class for test
+// the usage is the same,
+// but it only increases the length
+// without creating an ArrayBuffer to be written
+let simulator = new ByteStreamSimulator();
+
+simulator.length;
 ```
 
 ## All methods
