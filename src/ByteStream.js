@@ -194,7 +194,6 @@ module.exports = class ByteStream{
             a[0] += 128;
             a[a.length-1] -= 128;
         }
-        this.expand_buffer(a.length);
         a.forEach(n => this.write_uint8(n));
     }
     
@@ -205,7 +204,6 @@ module.exports = class ByteStream{
             a[0] += 128;
             a[a.length-1] -= 128;
         }
-        this.expand_buffer(a.length);
         a.forEach(n => this.write_uint8(n));
     }
     
