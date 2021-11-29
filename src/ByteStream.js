@@ -28,7 +28,7 @@ module.exports = class ByteStream{
         for(let i = 0;i < length;i++){
             arr.push(this.read_uint8());
         }
-        return arr;
+        return Uint8Array.from(arr);
     }
     
     read_int16(little_endian){

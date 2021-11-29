@@ -87,7 +87,8 @@ module.exports = class ByteStreamSimulator{
     }
     
     write_bytes(bytes){
-        for(let i = 0;i < bytes.length;i++){
+        let b = [...bytes];
+        for(let i = 0;i < b.length;i++){
             this.write_uint8();
         }
     }
