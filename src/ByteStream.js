@@ -9,6 +9,7 @@ module.exports = class ByteStream{
         this.buf = buf ? this.ensure_array_buffer(buf) : new ArrayBuffer();
         this.i = 0;
         this.view = new DataView(this.buf);
+        this.u8 = new Uint8Array(this.buf);
     }
     
     get buffer(){
@@ -24,11 +25,14 @@ module.exports = class ByteStream{
     }
     
     read_bytes(length){
-        let arr = [];
+        /*let arr = new Uint8Array(length);
         for(let i = 0;i < length;i++){
-            arr.push(this.read_uint8());
+            arr[i] = this.read_uint8();
+        }*/
+        if(this.i+length > this.buf.byteLength){
+            throw new RangeError('Offset is outside the bounds of the ArrayBuffer');
         }
-        return Uint8Array.from(arr);
+        return this.u8.subarray(this.i,this.i += length);
     }
     
     read_int16(little_endian){
@@ -116,11 +120,11 @@ module.exports = class ByteStream{
         if(this.buf.byteLength >= this.i+len) return;
         len = (this.i+len)-this.buf.byteLength;
         if(len <= 0) return;
-        let u8a1 = new Uint8Array(this.buf.byteLength+len);
-        let u8a2 = new Uint8Array(this.buf);
-        u8a1.set(u8a2);
-        this.buf = u8a1.buffer;
+        let u8 = new Uint8Array(this.buf.byteLength+len);
+        u8.set(new Uint8Array(this.buf));
+        this.buf = u8.buffer;
         this.view = new DataView(this.buf);
+        this.u8 = u8;
     }
     
     write_int8(val){
@@ -134,9 +138,9 @@ module.exports = class ByteStream{
     }
     
     write_bytes(bytes){
-        for(let n of bytes){
-            this.write_uint8(n);
-        }
+        this.expand_buffer(bytes.length);
+        this.u8.set(bytes,this.i);
+        this.i += bytes.length;
     }
     
     write_int16(val,little_endian){
