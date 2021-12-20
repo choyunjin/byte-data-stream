@@ -9,25 +9,25 @@ const { ByteStream,ByteStreamSimulator } = require('byte-data-stream');
 let buf = fs.readFileSync('......'); // any ArrayBuffer or Uint8Array or nodejs Buffer
 let stream = new ByteStream(buf);
 
-stream.read_int8(); // read signed byte
-stream.read_uint8(); // read unsigned byte
-stream.read_bytes(8); // read many bytes
-stream.read_int16(); // read signed big-endian 16-bit integer
-stream.read_uint16(true); // read unsigned little-endian 16-bit integer
-stream.read_var_uint(); // read unsigned big-endian varint
+stream.readInt8(); // read signed byte
+stream.readUint8(); // read unsigned byte
+stream.readBytes(8); // read many bytes
+stream.readInt16(); // read signed big-endian 16-bit integer
+stream.readUint16(true); // read unsigned little-endian 16-bit integer
+stream.readVarUint(); // read unsigned big-endian varint
 // ...
 
 let stream2 = new ByteStream();
-stream2.write_int8(96); // write signed byte
-stream2.write_uint8(192); // write unsigned byte
-stream2.write_bytes([19,72,11,21,19,72,11,21]); // write many bytes
-stream2.write_int16(1972); // write signed big-endian 16-bit integer
-stream2.write_uint16(49861,true); // write unsigned little-endian 16-bit integer
-stream2.write_var_uint(92736296525); // write unsigned big-endian varint
+stream2.writeInt8(96); // write signed byte
+stream2.writeUint8(192); // write unsigned byte
+stream2.writeBytes([19,72,11,21,19,72,11,21]); // write many bytes
+stream2.writeInt16(1972); // write signed big-endian 16-bit integer
+stream2.writeUint16(49861,true); // write unsigned little-endian 16-bit integer
+stream2.writeVarUint(92736296525); // write unsigned big-endian varint
 // ...
 
 // this is the class for test
-// the usage is the same,
+// the usage is same,
 // but it only increases the length
 // without creating an ArrayBuffer to be written
 let simulator = new ByteStreamSimulator();
@@ -42,32 +42,32 @@ stream.i; // position
 stream.buffer; // ArrayBuffer
 
 // methods for reading data
-stream.read_int8();
-stream.read_uint8();
-stream.read_bytes(length);
-stream.read_int16(little_endian);
-stream.read_uint16(little_endian);
-stream.read_int32(little_endian);
-stream.read_uint32(little_endian);
-stream.read_big_int64(little_endian);
-stream.read_big_uint64(little_endian);
-stream.read_float32(little_endian);
-stream.read_float64(little_endian);
-stream.read_var_int(little_endian,max_byte_length = Infinity);
-stream.read_var_uint(little_endian,max_byte_length = Infinity);
+stream.readInt8();
+stream.readUint8();
+stream.readBytes(length);
+stream.readInt16(littleEndian);
+stream.readUint16(littleEndian);
+stream.readInt32(littleEndian);
+stream.readUint32(littleEndian);
+stream.readBigInt64(littleEndian);
+stream.readBigUint64(littleEndian);
+stream.readFloat32(littleEndian);
+stream.readFloat64(littleEndian);
+stream.readVarInt(littleEndian,maxByteLength = Infinity);
+stream.readVarUint(littleEndian,maxByteLength = Infinity);
 
 // methods for writing data
-stream.write_int8(val);
-stream.write_uint8(val);
-stream.write_bytes(bytes);
-stream.write_int16(val,little_endian);
-stream.write_uint16(val,little_endian);
-stream.write_int32(val,little_endian);
-stream.write_uint32(val,little_endian);
-stream.write_big_int64(val,little_endian);
-stream.write_big_uint64(val,little_endian);
-stream.write_float32(val,little_endian);
-stream.write_float64(val,little_endian);
-stream.write_var_int(val,little_endian);
-stream.write_var_uint(val,little_endian);
+stream.writeInt8(val);
+stream.writeUint8(val);
+stream.writeBytes(bytes);
+stream.writeInt16(val,littleEndian);
+stream.writeUint16(val,littleEndian);
+stream.writeInt32(val,littleEndian);
+stream.writeUint32(val,littleEndian);
+stream.writeBigInt64(val,littleEndian);
+stream.writeBigUint64(val,littleEndian);
+stream.writeFloat32(val,littleEndian);
+stream.writeFloat64(val,littleEndian);
+stream.writeVarInt(val,littleEndian);
+stream.writeVarUint(val,littleEndian);
 ```

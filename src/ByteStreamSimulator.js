@@ -1,5 +1,5 @@
-const var_int = require('signed-varint');
-const var_uint = require('varint');
+const varint = require('signed-varint');
+const varuint = require('varint');
 
 class WriteOnlyException extends Error{
     constructor(...args){
@@ -8,151 +8,145 @@ class WriteOnlyException extends Error{
     }
 }
 
-module.exports = class ByteStreamSimulator{
-    constructor(){
+/**
+ * ㅆ발 이거 ㅈㄴ 노가다임
+ */
+module.exports = class ByteStream{
+    constructor(buf){
         this.i = 0;
         this.length = 0;
     }
     
-    read_int8(){
+    get buffer(){
+        return this.buf;
+    }
+    
+    readInt8(){
         throw new WriteOnlyException(null);
     }
     
-    read_uint8(){
+    readUint8(){
         throw new WriteOnlyException(null);
     }
     
-    read_bytes(){
+    readBytes(){
         throw new WriteOnlyException(null);
     }
     
-    read_int16(){
+    readInt16(){
         throw new WriteOnlyException(null);
     }
     
-    read_uint16(){
+    readUint16(){
         throw new WriteOnlyException(null);
     }
     
-    read_int32(){
+    readInt32(){
         throw new WriteOnlyException(null);
     }
     
-    read_uint32(){
+    readUint32(){
         throw new WriteOnlyException(null);
     }
     
-    read_big_int64(){
+    readBigInt64(){
         throw new WriteOnlyException(null);
     }
     
-    read_big_uint64(){
+    readBigUint64(){
         throw new WriteOnlyException(null);
     }
     
-    read_float32(){
+    readFloat32(){
         throw new WriteOnlyException(null);
     }
     
-    read_float64(){
+    readFloat64(){
         throw new WriteOnlyException(null);
     }
     
-    read_var_int_bytes(){
+    readVarIntBytes(){
         throw new WriteOnlyException(null);
     }
     
-    read_var_int(){
+    readVarInt(){
         throw new WriteOnlyException(null);
     }
     
-    read_var_uint(){
+    readVarUint(){
         throw new WriteOnlyException(null);
     }
     
     // ArrayBuffer를 확장한다.
-    expand_buffer(len){
+    expandBuffer(len){
         if(this.length >= this.i+len) return;
         this.length += (this.i+len)-this.length;
     }
     
-    write_int8(){
-        this.expand_buffer(1);
+    writeInt8(){
+        this.expandBuffer(1);
         this.i++;
     }
     
-    write_uint8(){
-        this.expand_buffer(1);
+    writeUint8(){
+        this.expandBuffer(1);
         this.i++;
     }
     
-    write_bytes(bytes){
+    writeBytes(bytes){
         let b = [...bytes];
         for(let i = 0;i < b.length;i++){
-            this.write_uint8();
+            this.writeUint8();
         }
     }
     
-    write_int16(){
-        this.expand_buffer(2);
+    writeInt16(){
+        this.expandBuffer(2);
         this.i += 2;
     }
     
-    write_uint16(){
-        this.expand_buffer(2);
+    writeUint16(){
+        this.expandBuffer(2);
         this.i += 2;
     }
     
-    write_int32(){
-        this.expand_buffer(4);
+    writeInt32(){
+        this.expandBuffer(4);
         this.i += 4;
     }
     
-    write_uint32(){
-        this.expand_buffer(4);
+    writeUint32(){
+        this.expandBuffer(4);
         this.i += 4;
     }
     
-    write_big_int64(){
-        this.expand_buffer(8);
+    writeBigInt64(){
+        this.expandBuffer(8);
         this.i += 8;
     }
     
-    write_big_uint64(){
-        this.expand_buffer(8);
+    writeBigUint64(){
+        this.expandBuffer(8);
         this.i += 8;
     }
     
-    write_float32(){
-        this.expand_buffer(4);
+    writeFloat32(){
+        this.expandBuffer(4);
         this.i += 4;
     }
     
-    write_float64(){
-        this.expand_buffer(8);
+    writeFloat64(){
+        this.expandBuffer(8);
         this.i += 8;
     }
     
-    write_var_int(val){
-        let a = var_int.encode(val);
-        a.forEach(() => this.write_uint8());
+    writeVarInt(val){
+        let a = varint.encode(val);
+        a.forEach(() => this.writeUint8());
     }
     
-    write_var_uint(val){
-        let a = var_uint.encode(val)
-        a.forEach(() => this.write_uint8());
-    }
-    
-    ensure_array_buffer(buf){
-        if(buf){
-            if(buf instanceof ArrayBuffer){
-                return buf;
-            }
-            // nodejs Buffer는 Uint8Array의 하위 클래스다
-            if(buf instanceof Uint8Array){
-                return new Uint8Array(buf).buffer;
-            }
-        }
-        throw new Error('Unsupported buffer type, need ArrayBuffer or Uint8Array or nodejs Buffer');
+    writeVarUint(val){
+        let a = varuint.encode(val);
+        a.forEach(() => this.writeUint8());
     }
 }

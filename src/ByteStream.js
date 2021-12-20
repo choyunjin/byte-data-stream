@@ -1,12 +1,12 @@
-const var_int = require('signed-varint');
-const var_uint = require('varint');
+const varint = require('signed-varint');
+const varuint = require('varint');
 
 /**
  * ㅆ발 이거 ㅈㄴ 노가다임
  */
 module.exports = class ByteStream{
     constructor(buf){
-        this.buf = buf ? this.ensure_array_buffer(buf) : new ArrayBuffer();
+        this.buf = buf ? this.ensureArrayBuffer(buf) : new ArrayBuffer();
         this.i = 0;
         this.view = new DataView(this.buf);
         this.u8 = new Uint8Array(this.buf);
@@ -16,18 +16,18 @@ module.exports = class ByteStream{
         return this.buf;
     }
     
-    read_int8(){
+    readInt8(){
         return this.view.getInt8(this.i++);
     }
     
-    read_uint8(){
+    readUint8(){
         return this.view.getUint8(this.i++);
     }
     
-    read_bytes(length){
+    readBytes(length){
         /*let arr = new Uint8Array(length);
         for(let i = 0;i < length;i++){
-            arr[i] = this.read_uint8();
+            arr[i] = this.readUint8();
         }*/
         if(this.i+length > this.buf.byteLength){
             throw new RangeError('Offset is outside the bounds of the ArrayBuffer');
@@ -35,88 +35,88 @@ module.exports = class ByteStream{
         return this.u8.subarray(this.i,this.i += length);
     }
     
-    read_int16(little_endian){
-        let n = this.view.getInt16(this.i,little_endian);
+    readInt16(littleEndian){
+        let n = this.view.getInt16(this.i,littleEndian);
         this.i += 2;
         return n;
     }
     
-    read_uint16(little_endian){
-        let n = this.view.getUint16(this.i,little_endian);
+    readUint16(littleEndian){
+        let n = this.view.getUint16(this.i,littleEndian);
         this.i += 2;
         return n;
     }
     
-    read_int32(little_endian){
-        let n = this.view.getInt32(this.i,little_endian);
+    readInt32(littleEndian){
+        let n = this.view.getInt32(this.i,littleEndian);
         this.i += 4;
         return n;
     }
     
-    read_uint32(little_endian){
-        let n = this.view.getUint32(this.i,little_endian);
+    readUint32(littleEndian){
+        let n = this.view.getUint32(this.i,littleEndian);
         this.i += 4;
         return n;
     }
     
-    read_big_int64(little_endian){
-        let n = this.view.getBigInt64(this.i,little_endian);
+    readBigInt64(littleEndian){
+        let n = this.view.getBigInt64(this.i,littleEndian);
         this.i += 8;
         return n;
     }
     
-    read_big_uint64(little_endian){
-        let n = this.view.getBigUint64(this.i,little_endian);
+    readBigUint64(littleEndian){
+        let n = this.view.getBigUint64(this.i,littleEndian);
         this.i += 8;
         return n;
     }
     
-    read_float32(little_endian){
-        let n = this.view.getFloat32(this.i,little_endian);
+    readFloat32(littleEndian){
+        let n = this.view.getFloat32(this.i,littleEndian);
         this.i += 4;
         return n;
     }
     
-    read_float64(little_endian){
-        let n = this.view.getFloat64(this.i,little_endian);
+    readFloat64(littleEndian){
+        let n = this.view.getFloat64(this.i,littleEndian);
         this.i += 8;
         return n;
     }
     
-    read_var_int_bytes(max_byte_length = Infinity){
+    readVarIntBytes(maxByteLength = Infinity){
         let bytes = [];
         let i = 0;
-        while(max_byte_length > i++){
-            bytes.push(this.read_uint8());
+        while(maxByteLength > i++){
+            bytes.push(this.readUint8());
             if(!(bytes[bytes.length-1] & 128)){
                 return bytes;
             }
         }
-        throw new RangeError(`0x${this.i.toString(16)}: Variable integer length cannot exceed ${max_byte_length} bytes`);
+        throw new RangeError(`0x${this.i.toString(16)}: Variable integer length cannot exceed ${maxByteLength} bytes`);
     }
     
-    read_var_int(little_endian,max_byte_length = Infinity){
-        let bytes = this.read_var_int_bytes(max_byte_length);
-        if(!little_endian){
+    readVarInt(littleEndian,maxByteLength = Infinity){
+        let bytes = this.readVarIntBytes(maxByteLength);
+        if(!littleEndian){
             bytes = bytes.reverse();
             bytes[0] += 128;
             bytes[bytes.length-1] -= 128;
         }
-        return var_int.decode(bytes);
+        return varint.decode(bytes);
     }
     
-    read_var_uint(little_endian,max_byte_length = Infinity){
-        let bytes = this.read_var_int_bytes(max_byte_length);
-        if(!little_endian){
+    readVarUint(littleEndian,maxByteLength = Infinity){
+        let bytes = this.readVarIntBytes(maxByteLength);
+        if(!littleEndian){
             bytes = bytes.reverse();
             bytes[0] += 128;
             bytes[bytes.length-1] -= 128;
         }
-        return var_uint.decode(bytes);
+        return varuint.decode(bytes);
     }
     
     // ArrayBuffer를 확장한다.
-    expand_buffer(len){
+    expandBuffer(len){
         if(this.buf.byteLength >= this.i+len) return;
         len = (this.i+len)-this.buf.byteLength;
         if(len <= 0) return;
@@ -127,91 +127,91 @@ module.exports = class ByteStream{
         this.u8 = u8;
     }
     
-    write_int8(val){
-        this.expand_buffer(1);
+    writeInt8(val){
+        this.expandBuffer(1);
         this.view.setInt8(this.i++,val);
     }
     
-    write_uint8(val){
-        this.expand_buffer(1);
+    writeUint8(val){
+        this.expandBuffer(1);
         this.view.setUint8(this.i++,val);
     }
     
-    write_bytes(bytes){
-        this.expand_buffer(bytes.length);
+    writeBytes(bytes){
+        this.expandBuffer(bytes.length);
         this.u8.set(bytes,this.i);
         this.i += bytes.length;
     }
     
-    write_int16(val,little_endian){
-        this.expand_buffer(2);
-        let n = this.view.setInt16(this.i,val,little_endian);
+    writeInt16(val,littleEndian){
+        this.expandBuffer(2);
+        let n = this.view.setInt16(this.i,val,littleEndian);
         this.i += 2;
     }
     
-    write_uint16(val,little_endian){
-        this.expand_buffer(2);
-        let n = this.view.setUint16(this.i,val,little_endian);
+    writeUint16(val,littleEndian){
+        this.expandBuffer(2);
+        let n = this.view.setUint16(this.i,val,littleEndian);
         this.i += 2;
     }
     
-    write_int32(val,little_endian){
-        this.expand_buffer(4);
-        let n = this.view.setInt32(this.i,val,little_endian);
+    writeInt32(val,littleEndian){
+        this.expandBuffer(4);
+        let n = this.view.setInt32(this.i,val,littleEndian);
         this.i += 4;
     }
     
-    write_uint32(val,little_endian){
-        this.expand_buffer(4);
-        let n = this.view.setUint32(this.i,val,little_endian);
+    writeUint32(val,littleEndian){
+        this.expandBuffer(4);
+        let n = this.view.setUint32(this.i,val,littleEndian);
         this.i += 4;
     }
     
-    write_big_int64(val,little_endian){
-        this.expand_buffer(8);
-        let n = this.view.setBigInt64(this.i,val,little_endian);
+    writeBigInt64(val,littleEndian){
+        this.expandBuffer(8);
+        let n = this.view.setBigInt64(this.i,val,littleEndian);
         this.i += 8;
     }
     
-    write_big_uint64(val,little_endian){
-        this.expand_buffer(8);
-        let n = this.view.setBigUint64(this.i,val,little_endian);
+    writeBigUint64(val,littleEndian){
+        this.expandBuffer(8);
+        let n = this.view.setBigUint64(this.i,val,littleEndian);
         this.i += 8;
     }
     
-    write_float32(val,little_endian){
-        this.expand_buffer(4);
-        let n = this.view.setFloat32(this.i,val,little_endian);
+    writeFloat32(val,littleEndian){
+        this.expandBuffer(4);
+        let n = this.view.setFloat32(this.i,val,littleEndian);
         this.i += 4;
     }
     
-    write_float64(val,little_endian){
-        this.expand_buffer(8);
-        let n = this.view.setFloat64(this.i,val,little_endian);
+    writeFloat64(val,littleEndian){
+        this.expandBuffer(8);
+        let n = this.view.setFloat64(this.i,val,littleEndian);
         this.i += 8;
     }
     
-    write_var_int(val,little_endian){
-        let a = var_int.encode(val);
-        if(!little_endian){
+    writeVarInt(val,littleEndian){
+        let a = varint.encode(val);
+        if(!littleEndian){
             a = a.reverse();
             a[0] += 128;
             a[a.length-1] -= 128;
         }
-        a.forEach(n => this.write_uint8(n));
+        a.forEach(n => this.writeUint8(n));
     }
     
-    write_var_uint(val,little_endian){
-        let a = var_uint.encode(val);
-        if(!little_endian){
+    writeVarUint(val,littleEndian){
+        let a = varuint.encode(val);
+        if(!littleEndian){
             a = a.reverse();
             a[0] += 128;
             a[a.length-1] -= 128;
         }
-        a.forEach(n => this.write_uint8(n));
+        a.forEach(n => this.writeUint8(n));
     }
     
-    ensure_array_buffer(buf){
+    ensureArrayBuffer(buf){
         if(buf){
             if(buf instanceof ArrayBuffer){
                 return buf;
