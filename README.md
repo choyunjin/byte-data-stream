@@ -40,6 +40,8 @@ simulator.length;
 // properties
 stream.i; // position
 stream.buffer; // ArrayBuffer
+stream.length; // length of stream.buffer
+stream.isDataAvailable; // stream.i < stream.length
 
 // methods for reading data
 stream.readInt8();

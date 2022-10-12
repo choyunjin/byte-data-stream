@@ -16,6 +16,14 @@ module.exports = class ByteStream{
         return this.buf;
     }
     
+    get length(){
+        return a.buffer.byteLength;
+    }
+    
+    get isDataAvailable(){
+        return a.i < a.buffer.byteLength;
+    }
+    
     readInt8(){
         return this.view.getInt8(this.i++);
     }
