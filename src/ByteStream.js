@@ -17,11 +17,11 @@ module.exports = class ByteStream{
     }
     
     get length(){
-        return a.buffer.byteLength;
+        return this.buf.byteLength;
     }
     
     get isDataAvailable(){
-        return a.i < a.buffer.byteLength;
+        return this.i < this.buf.byteLength;
     }
     
     readInt8(){
