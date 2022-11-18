@@ -5,11 +5,12 @@ const varuint = require('varint');
  * ㅆ발 이거 ㅈㄴ 노가다임
  */
 module.exports = class ByteStream{
-    constructor(buf){
+    constructor(buf,littleEndian = false){
         this.buf = buf ? this.ensureArrayBuffer(buf) : new ArrayBuffer();
         this.i = 0;
         this.view = new DataView(this.buf);
         this.u8 = new Uint8Array(this.buf);
+        this.littleEndian = littleEndian;
     }
     
     get buffer(){
@@ -43,49 +44,57 @@ module.exports = class ByteStream{
         return this.u8.subarray(this.i,this.i += length);
     }
     
-    readInt16(littleEndian){
+    readInt16(oppositeEndian){
+        let littleEndian = !!(this.littleEndian ^ oppositeEndian);
         let n = this.view.getInt16(this.i,littleEndian);
         this.i += 2;
         return n;
     }
     
-    readUint16(littleEndian){
+    readUint16(oppositeEndian){
+        let littleEndian = !!(this.littleEndian ^ oppositeEndian);
         let n = this.view.getUint16(this.i,littleEndian);
         this.i += 2;
         return n;
     }
     
-    readInt32(littleEndian){
+    readInt32(oppositeEndian){
+        let littleEndian = !!(this.littleEndian ^ oppositeEndian);
         let n = this.view.getInt32(this.i,littleEndian);
         this.i += 4;
         return n;
     }
     
-    readUint32(littleEndian){
+    readUint32(oppositeEndian){
+        let littleEndian = !!(this.littleEndian ^ oppositeEndian);
         let n = this.view.getUint32(this.i,littleEndian);
         this.i += 4;
         return n;
     }
     
-    readBigInt64(littleEndian){
+    readBigInt64(oppositeEndian){
+        let littleEndian = !!(this.littleEndian ^ oppositeEndian);
         let n = this.view.getBigInt64(this.i,littleEndian);
         this.i += 8;
         return n;
     }
     
-    readBigUint64(littleEndian){
+    readBigUint64(oppositeEndian){
+        let littleEndian = !!(this.littleEndian ^ oppositeEndian);
         let n = this.view.getBigUint64(this.i,littleEndian);
         this.i += 8;
         return n;
     }
     
-    readFloat32(littleEndian){
+    readFloat32(oppositeEndian){
+        let littleEndian = !!(this.littleEndian ^ oppositeEndian);
         let n = this.view.getFloat32(this.i,littleEndian);
         this.i += 4;
         return n;
     }
     
-    readFloat64(littleEndian){
+    readFloat64(oppositeEndian){
+        let littleEndian = !!(this.littleEndian ^ oppositeEndian);
         let n = this.view.getFloat64(this.i,littleEndian);
         this.i += 8;
         return n;
@@ -103,7 +112,8 @@ module.exports = class ByteStream{
         throw new RangeError(`0x${this.i.toString(16)}: Variable integer length cannot exceed ${maxByteLength} bytes`);
     }
     
-    readVarInt(littleEndian,maxByteLength = Infinity){
+    readVarInt(oppositeEndian,maxByteLength = Infinity){
+        let littleEndian = !!(this.littleEndian ^ oppositeEndian);
         let bytes = this.readVarIntBytes(maxByteLength);
         if(!littleEndian){
             bytes = bytes.reverse();
@@ -113,7 +123,8 @@ module.exports = class ByteStream{
         return varint.decode(bytes);
     }
     
-    readVarUint(littleEndian,maxByteLength = Infinity){
+    readVarUint(oppositeEndian,maxByteLength = Infinity){
+        let littleEndian = !!(this.littleEndian ^ oppositeEndian);
         let bytes = this.readVarIntBytes(maxByteLength);
         if(!littleEndian){
             bytes = bytes.reverse();
@@ -151,55 +162,64 @@ module.exports = class ByteStream{
         this.i += bytes.length;
     }
     
-    writeInt16(val,littleEndian){
+    writeInt16(val,oppositeEndian){
+        let littleEndian = !!(this.littleEndian ^ oppositeEndian);
         this.expandBuffer(2);
         let n = this.view.setInt16(this.i,val,littleEndian);
         this.i += 2;
     }
     
-    writeUint16(val,littleEndian){
+    writeUint16(val,oppositeEndian){
+        let littleEndian = !!(this.littleEndian ^ oppositeEndian);
         this.expandBuffer(2);
         let n = this.view.setUint16(this.i,val,littleEndian);
         this.i += 2;
     }
     
-    writeInt32(val,littleEndian){
+    writeInt32(val,oppositeEndian){
+        let littleEndian = !!(this.littleEndian ^ oppositeEndian);
         this.expandBuffer(4);
         let n = this.view.setInt32(this.i,val,littleEndian);
         this.i += 4;
     }
     
-    writeUint32(val,littleEndian){
+    writeUint32(val,oppositeEndian){
+        let littleEndian = !!(this.littleEndian ^ oppositeEndian);
         this.expandBuffer(4);
         let n = this.view.setUint32(this.i,val,littleEndian);
         this.i += 4;
     }
     
-    writeBigInt64(val,littleEndian){
+    writeBigInt64(val,oppositeEndian){
+        let littleEndian = !!(this.littleEndian ^ oppositeEndian);
         this.expandBuffer(8);
         let n = this.view.setBigInt64(this.i,val,littleEndian);
         this.i += 8;
     }
     
-    writeBigUint64(val,littleEndian){
+    writeBigUint64(val,oppositeEndian){
+        let littleEndian = !!(this.littleEndian ^ oppositeEndian);
         this.expandBuffer(8);
         let n = this.view.setBigUint64(this.i,val,littleEndian);
         this.i += 8;
     }
     
-    writeFloat32(val,littleEndian){
+    writeFloat32(val,oppositeEndian){
+        let littleEndian = !!(this.littleEndian ^ oppositeEndian);
         this.expandBuffer(4);
         let n = this.view.setFloat32(this.i,val,littleEndian);
         this.i += 4;
     }
     
-    writeFloat64(val,littleEndian){
+    writeFloat64(val,oppositeEndian){
+        let littleEndian = !!(this.littleEndian ^ oppositeEndian);
         this.expandBuffer(8);
         let n = this.view.setFloat64(this.i,val,littleEndian);
         this.i += 8;
     }
     
-    writeVarInt(val,littleEndian){
+    writeVarInt(val,oppositeEndian){
+        let littleEndian = !!(this.littleEndian ^ oppositeEndian);
         let a = varint.encode(val);
         if(!littleEndian){
             a = a.reverse();
@@ -209,7 +229,8 @@ module.exports = class ByteStream{
         a.forEach(n => this.writeUint8(n));
     }
     
-    writeVarUint(val,littleEndian){
+    writeVarUint(val,oppositeEndian){
+        let littleEndian = !!(this.littleEndian ^ oppositeEndian);
         let a = varuint.encode(val);
         if(!littleEndian){
             a = a.reverse();

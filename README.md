@@ -43,33 +43,35 @@ stream.buffer; // ArrayBuffer
 stream.length; // length of stream.buffer
 stream.isDataAvailable; // stream.i < stream.length
 
+new ByteStream(buf,littleEndian = false);
+
 // methods for reading data
 stream.readInt8();
 stream.readUint8();
 stream.readBytes(length);
-stream.readInt16(littleEndian);
-stream.readUint16(littleEndian);
-stream.readInt32(littleEndian);
-stream.readUint32(littleEndian);
-stream.readBigInt64(littleEndian);
-stream.readBigUint64(littleEndian);
-stream.readFloat32(littleEndian);
-stream.readFloat64(littleEndian);
-stream.readVarInt(littleEndian,maxByteLength = Infinity);
-stream.readVarUint(littleEndian,maxByteLength = Infinity);
+stream.readInt16(oppositeEndian);
+stream.readUint16(oppositeEndian);
+stream.readInt32(oppositeEndian);
+stream.readUint32(oppositeEndian);
+stream.readBigInt64(oppositeEndian);
+stream.readBigUint64(oppositeEndian);
+stream.readFloat32(oppositeEndian);
+stream.readFloat64(oppositeEndian);
+stream.readVarInt(oppositeEndian,maxByteLength = Infinity);
+stream.readVarUint(oppositeEndian,maxByteLength = Infinity);
 
 // methods for writing data
 stream.writeInt8(val);
 stream.writeUint8(val);
 stream.writeBytes(bytes);
-stream.writeInt16(val,littleEndian);
-stream.writeUint16(val,littleEndian);
-stream.writeInt32(val,littleEndian);
-stream.writeUint32(val,littleEndian);
-stream.writeBigInt64(val,littleEndian);
-stream.writeBigUint64(val,littleEndian);
-stream.writeFloat32(val,littleEndian);
-stream.writeFloat64(val,littleEndian);
-stream.writeVarInt(val,littleEndian);
-stream.writeVarUint(val,littleEndian);
+stream.writeInt16(val,oppositeEndian);
+stream.writeUint16(val,oppositeEndian);
+stream.writeInt32(val,oppositeEndian);
+stream.writeUint32(val,oppositeEndian);
+stream.writeBigInt64(val,oppositeEndian);
+stream.writeBigUint64(val,oppositeEndian);
+stream.writeFloat32(val,oppositeEndian);
+stream.writeFloat64(val,oppositeEndian);
+stream.writeVarInt(val,oppositeEndian);
+stream.writeVarUint(val,oppositeEndian);
 ```
