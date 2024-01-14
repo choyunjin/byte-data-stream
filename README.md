@@ -3,8 +3,9 @@ Readable & writable byte data stream
 
 ## Usage
 ```js
-const fs = require('fs');
-const { ByteStream,ByteStreamSimulator } = require('byte-data-stream');
+// use require() if you are using CommonJS module
+import fs from 'fs';
+import { ByteStream, ByteStreamSimulator } from 'byte-data-stream';
 
 let buf = fs.readFileSync('......'); // any ArrayBuffer or Uint8Array or nodejs Buffer
 let stream = new ByteStream(buf);
@@ -20,9 +21,9 @@ stream.readVarUint(); // read unsigned big-endian varint
 let stream2 = new ByteStream();
 stream2.writeInt8(96); // write signed byte
 stream2.writeUint8(192); // write unsigned byte
-stream2.writeBytes([19,72,11,21,19,72,11,21]); // write many bytes
+stream2.writeBytes([19, 72, 11, 21, 19, 72, 11, 21]); // write many bytes
 stream2.writeInt16(1972); // write signed big-endian 16-bit integer
-stream2.writeUint16(49861,true); // write unsigned little-endian 16-bit integer
+stream2.writeUint16(49861, true); // write unsigned little-endian 16-bit integer
 stream2.writeVarUint(92736296525); // write unsigned big-endian varint
 // ...
 
@@ -43,7 +44,7 @@ stream.buffer; // ArrayBuffer
 stream.length; // length of stream.buffer
 stream.isDataAvailable; // stream.i < stream.length
 
-new ByteStream(buf,littleEndian = false);
+new ByteStream(buf, (littleEndian = false));
 
 // methods for reading data
 stream.readInt8();
@@ -57,21 +58,21 @@ stream.readBigInt64(oppositeEndian);
 stream.readBigUint64(oppositeEndian);
 stream.readFloat32(oppositeEndian);
 stream.readFloat64(oppositeEndian);
-stream.readVarInt(oppositeEndian,maxByteLength = Infinity);
-stream.readVarUint(oppositeEndian,maxByteLength = Infinity);
+stream.readVarInt(oppositeEndian, (maxByteLength = Infinity));
+stream.readVarUint(oppositeEndian, (maxByteLength = Infinity));
 
 // methods for writing data
 stream.writeInt8(val);
 stream.writeUint8(val);
 stream.writeBytes(bytes);
-stream.writeInt16(val,oppositeEndian);
-stream.writeUint16(val,oppositeEndian);
-stream.writeInt32(val,oppositeEndian);
-stream.writeUint32(val,oppositeEndian);
-stream.writeBigInt64(val,oppositeEndian);
-stream.writeBigUint64(val,oppositeEndian);
-stream.writeFloat32(val,oppositeEndian);
-stream.writeFloat64(val,oppositeEndian);
-stream.writeVarInt(val,oppositeEndian);
-stream.writeVarUint(val,oppositeEndian);
+stream.writeInt16(val, oppositeEndian);
+stream.writeUint16(val, oppositeEndian);
+stream.writeInt32(val, oppositeEndian);
+stream.writeUint32(val, oppositeEndian);
+stream.writeBigInt64(val, oppositeEndian);
+stream.writeBigUint64(val, oppositeEndian);
+stream.writeFloat32(val, oppositeEndian);
+stream.writeFloat64(val, oppositeEndian);
+stream.writeVarInt(val, oppositeEndian);
+stream.writeVarUint(val, oppositeEndian);
 ```
