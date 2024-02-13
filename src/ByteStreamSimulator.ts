@@ -1,7 +1,7 @@
-const varint = require('signed-varint');
-const varuint = require('varint');
+import varint from 'signed-varint';
+import varuint from 'varint';
 
-class WriteOnlyException extends Error {
+export class WriteOnlyException extends Error {
     constructor(...args) {
         super(...args);
         this.name = 'WriteOnlyException';
@@ -9,16 +9,27 @@ class WriteOnlyException extends Error {
 }
 
 /**
- * ㅆ발 이거 ㅈㄴ 노가다임
+ * 개 노가다임22
  */
-module.exports = class ByteStream {
-    constructor(buf) {
+export class ByteStreamSimulator {
+    i: number;
+    #byteLength: number;
+
+    constructor(buf?: ArrayBuffer) {
         this.i = 0;
-        this.length = 0;
+        this.#byteLength = 0;
     }
 
-    get buffer() {
-        return this.buf;
+    get buffer(): ArrayBuffer {
+        return null;
+    }
+    
+    get length(): number {
+        return this.#byteLength;
+    }
+    
+    get isDataAvailable(): boolean {
+        return false;
     }
 
     readInt8() {
@@ -78,9 +89,9 @@ module.exports = class ByteStream {
     }
 
     // ArrayBuffer를 확장한다.
-    expandBuffer(len) {
-        if (this.length >= this.i + len) return;
-        this.length += this.i + len - this.length;
+    expandBuffer(len: number) {
+        if (this.#byteLength >= this.i + len) return;
+        this.#byteLength += this.i + len - this.#byteLength;
     }
 
     writeInt8() {
