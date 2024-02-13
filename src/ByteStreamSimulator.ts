@@ -160,4 +160,4 @@ export class ByteStreamSimulator {
         let a = varuint.encode(val);
         a.forEach(() => this.writeUint8());
     }
-};
+}
