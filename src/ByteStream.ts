@@ -1,17 +1,18 @@
 import varint from 'signed-varint';
 import varuint from 'varint';
+import { ByteStreamInterface } from './ByteStreamInterface.js';
 
 /**
  * 개 노가다임
  */
-export class ByteStream {
+export class ByteStream implements ByteStreamInterface {
     i: number;
     #buf: ArrayBuffer;
     private view: DataView;
     private u8: Uint8Array;
     private littleEndian: boolean;
     
-    constructor(buf: ArrayBuffer | Uint8Array, littleEndian: boolean = false) {
+    constructor(buf: ArrayBuffer | Uint8Array = null, littleEndian: boolean = false) {
         this.#buf = buf ? this.#ensureArrayBuffer(buf) : new ArrayBuffer(0);
         this.i = 0;
         this.view = new DataView(this.#buf);
@@ -52,7 +53,7 @@ export class ByteStream {
         return this.view.getUint8(this.i++);
     }
 
-    readBytes(length): Uint8Array {
+    readBytes(length: number): Uint8Array {
         if (this.i + length > this.#buf.byteLength) {
             throw new RangeError('Offset is outside the bounds of the ArrayBuffer');
         }
