@@ -9,9 +9,6 @@ export class WriteOnlyException extends Error {
     }
 }
 
-/**
- * 개 노가다임22
- */
 export class ByteStreamSimulator implements ByteStreamInterface {
     i: number;
     #byteLength: number;
@@ -42,6 +39,10 @@ export class ByteStreamSimulator implements ByteStreamInterface {
     }
 
     readBytes(): Uint8Array {
+        throw new WriteOnlyException(null);
+    }
+    
+    readBytesUntilEnd(): Uint8Array {
         throw new WriteOnlyException(null);
     }
 
