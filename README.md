@@ -32,7 +32,7 @@ stream2.writeVarUint(92736296525); // 부호 없는 빅 엔디언 가변 길이 
 // ...
 
 // 테스트용 클래스
-// ArrayBuffer 데이터를 기록하지 않고
+// ArrayBuffer에 데이터를 기록하지 않고
 // 길이만 증가시키기 때문에
 // 길이를 미리 측정해서 기록하도록 할 수 있음
 let simulator = new ByteStreamSimulator();
