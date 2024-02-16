@@ -131,4 +131,7 @@ dist
 # 테스트 파일
 test/
 
+# 문서
+docs
+
 # End of https://www.toptal.com/developers/gitignore/api/node
