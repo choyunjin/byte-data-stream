@@ -13,7 +13,7 @@ export class ByteStreamSimulator implements ByteStreamInterface {
     i: number;
     #byteLength: number;
 
-    constructor(buf: ArrayBuffer | Uint8Array) {
+    constructor(buf?: ArrayBuffer | Uint8Array) {
         this.i = 0;
         this.#byteLength = 0;
     }

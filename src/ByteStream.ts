@@ -14,14 +14,14 @@ export class ByteStream implements ByteStreamInterface {
      * @param length 버퍼의 길이
      * @param littleEndian 리틀 엔디언을 사용할 것인지 여부. false면 빅 엔디언을 사용한다
      */
-    constructor(length: number, littleEndian: boolean);
+    constructor(length: number, littleEndian?: boolean);
 
     /**
      * 데이터가 담긴 버퍼를 받는 생성자
      * @param buf 데이터 버퍼. null이면 새로 생성함
      * @param littleEndian 리틀 엔디언을 사용할 것인지 여부. false면 빅 엔디언을 사용한다
      */
-    constructor(buf: ArrayBuffer | Uint8Array, littleEndian: boolean);
+    constructor(buf: ArrayBuffer | Uint8Array, littleEndian?: boolean);
 
     constructor(buf: ArrayBuffer | Uint8Array | number = null, littleEndian: boolean = false) {
         if (typeof buf == 'number') {
