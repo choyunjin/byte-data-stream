@@ -261,7 +261,7 @@ export class ByteStream implements ByteStreamInterface {
             a[0] += 128;
             a[a.length - 1] -= 128;
         }
-        a.forEach(n => this.writeUint8(n));
+        this.writeBytes(Uint8Array.from(a));
     }
 
     writeVarUint(val: number, oppositeEndian: boolean = false) {
@@ -272,6 +272,6 @@ export class ByteStream implements ByteStreamInterface {
             a[0] += 128;
             a[a.length - 1] -= 128;
         }
-        a.forEach(n => this.writeUint8(n));
+        this.writeBytes(Uint8Array.from(a));
     }
 }
