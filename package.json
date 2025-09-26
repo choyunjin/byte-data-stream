@@ -13,7 +13,7 @@
     "license": "MIT",
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/kmoon2437/byte-data-stream.git"
+        "url": "git+https://github.com/choyunjin/byte-data-stream.git"
     },
     "keywords": [
         "byte",
@@ -22,9 +22,9 @@
         "stream"
     ],
     "bugs": {
-        "url": "https://github.com/kmoon2437/byte-data-stream/issues"
+        "url": "https://github.com/choyunjin/byte-data-stream/issues"
     },
-    "homepage": "https://github.com/kmoon2437/byte-data-stream#readme",
+    "homepage": "https://github.com/choyunjin/byte-data-stream#readme",
     "dependencies": {
         "signed-varint": "^2.0.1",
         "varint": "^6.0.0"
